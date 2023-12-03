@@ -9,3 +9,7 @@
   font-weight: bold;
   padding-right: 20px;
 }
+
+.card img {
+  width: 50px;
+}

@@ -34,7 +34,7 @@ function PersonData({ data }: Props) {
       </div>
       <div>
         <span>Picture:</span>
-        {data.picture}
+        <img src={data.base64Image?.toString()} alt="" />
       </div>
       <div>
         <span>Country:</span>

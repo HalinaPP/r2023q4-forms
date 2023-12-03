@@ -44,16 +44,30 @@ function UncontrolledElements() {
       password: target.password.value,
       confirmPassword: target.confirmPassword.value,
       accept: target.accept.value === "on",
-      picture: target.picture.value,
+      picture: target.picture.files,
       country: target.country.value,
+      base64Image: null,
     };
+
+    const pictureFiles = target.picture.files;
 
     await personSchema
       .validate(person, { abortEarly: false })
       .then(() => {
-        dispatch(addUncontrolledData(person));
-        dispatch(setLastFilledForm(Forms.uncontrolled));
-        navigate("/");
+        const reader = new FileReader();
+        reader.readAsDataURL(pictureFiles[0]);
+
+        reader.onload = () => {
+          dispatch(
+            addUncontrolledData({
+              ...person,
+              picture: pictureFiles[0].name,
+              base64Image: reader.result,
+            }),
+          );
+          dispatch(setLastFilledForm(Forms.uncontrolled));
+          navigate("/");
+        };
       })
       .catch((err: yup.ValidationError) => {
         const errors: Fields = collectErrors(err);
@@ -73,7 +87,7 @@ function UncontrolledElements() {
     const currPassword = (event.target as HTMLInputElement).value;
     const strengthCount = countMatchedStrengthRequirements(currPassword);
     const currPasswordStrength = calculatePasswordStrength(strengthCount);
-    
+
     setPasswordStrength(currPasswordStrength);
   };
 
@@ -81,6 +95,7 @@ function UncontrolledElements() {
     <>
       <h1>Uncontrolled Elements</h1>
       <form
+        encType="multipart/form-data"
         className={styles.form}
         onSubmit={handleSubmit}
         onChange={handleChange}
@@ -90,7 +105,6 @@ function UncontrolledElements() {
           <input type="text" id="name" />
         </label>
         <p>
-          {" "}
           {fieldsErrors.name && (
             <span className={styles.error}>{fieldsErrors.name}</span>
           )}
@@ -134,7 +148,6 @@ function UncontrolledElements() {
           <input type="password" id="confirmPassword" />
         </label>
         <p>
-          {" "}
           {fieldsErrors.confirmPassword && (
             <span className={styles.error}>{fieldsErrors.confirmPassword}</span>
           )}

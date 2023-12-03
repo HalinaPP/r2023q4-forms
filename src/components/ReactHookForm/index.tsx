@@ -34,9 +34,22 @@ function ReactHookForm() {
   }, []);
 
   const onSubmitHandler: SubmitHandler<Person> = (data) => {
-    dispatch(addReactHookData(data));
-    dispatch(setLastFilledForm(Forms.reactHook));
-    navigate("/");
+    const pictureFiles = data.picture;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(pictureFiles[0]);
+
+    reader.onload = () => {
+      dispatch(
+        addReactHookData({
+          ...data,
+          picture: pictureFiles[0].name,
+          base64Image: reader.result,
+        }),
+      );
+      dispatch(setLastFilledForm(Forms.uncontrolled));
+      navigate("/");
+    };
   };
 
   const checkPasswordStrength = (event: ChangeEvent) => {
@@ -50,7 +63,11 @@ function ReactHookForm() {
   return (
     <>
       <h1>React Hook Form Elements</h1>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
+      <form
+        encType="multipart/form-data"
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmitHandler)}
+      >
         <label htmlFor="name">
           Name:
           <input type="text" id="name" {...register("name")} />

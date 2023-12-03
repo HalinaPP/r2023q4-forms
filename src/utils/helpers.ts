@@ -25,3 +25,17 @@ export const countMatchedStrengthRequirements = (password: string): number => {
   });
   return strengthCount;
 };
+
+export const convertImageToBase64 = async (
+  blob: Blob,
+  setBase64Image: React.Dispatch<
+    React.SetStateAction<string | ArrayBuffer | null>
+  >,
+) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(blob);
+
+  reader.onload = () => {
+    setBase64Image(reader.result);
+  };
+};

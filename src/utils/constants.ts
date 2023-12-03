@@ -12,3 +12,6 @@ export const PasswordStrengthRequirements = [
   NumberPattern,
   MinPasswordLenght,
 ];
+
+export const SUPPORTED_FORMATS = ["image/png", "image/jpeg", "image/jpg"];
+export const maxFileSize = 500 * 1024;
