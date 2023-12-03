@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Person } from "./validation/form.schema";
+import { Gender, Person } from "./validation/form.schema";
 
 export interface ChildrenProps {
   children: ReactNode;
@@ -8,8 +8,6 @@ export interface ChildrenProps {
 export type Fields = {
   [key in keyof Person]: string;
 };
-
-type Gender = "male" | "female";
 
 export interface Person2 {
   name: string;
@@ -22,3 +20,8 @@ export interface Person2 {
   picture: string;
   country: string;
 }
+export enum Forms {
+  uncontrolled = "uncontrolled",
+  reactHook = "reactHook",
+}
+export type FilledForm = Forms.uncontrolled | Forms.reactHook | undefined;

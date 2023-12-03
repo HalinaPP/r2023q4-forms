@@ -1,17 +1,26 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 import { Person, personSchema } from "../../validation/form.schema";
 import collectErrors from "../../validation/helpers";
-import { Fields } from "../../types";
+import { Fields, Forms } from "../../types";
 
 import styles from "./UncontrolledElements.module.css";
+import { useAppDispatch } from "../../store/hooks/redux";
+import { setUncontrolledData } from "../../store/reducers/uncontrolledForm.slice";
+import { setLastFilledForm } from "../../store/reducers/forms.slice";
 
 function UncontrolledElements() {
   const [fieldsErrors, setFieldErrors] = useState<Fields>({} as Fields);
   const [isNotValid, setIsNotValid] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setLastFilledForm(undefined));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getIsFormNotValid = (errorArr: Fields) =>
     Object.keys(errorArr).length > 0;
@@ -36,6 +45,8 @@ function UncontrolledElements() {
     await personSchema
       .validate(person, { abortEarly: false })
       .then(() => {
+        dispatch(setUncontrolledData(person));
+        dispatch(setLastFilledForm(Forms.uncontrolled));
         navigate("/");
       })
       .catch((err: yup.ValidationError) => {

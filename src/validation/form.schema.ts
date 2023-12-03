@@ -32,4 +32,8 @@ export const personSchema = object({
   country: string().defined(),
 });
 
-export interface Person extends InferType<typeof personSchema> {}
+export interface Person extends InferType<typeof personSchema> {
+  gender: Gender;
+}
+
+export type Gender = "male" | "female";
