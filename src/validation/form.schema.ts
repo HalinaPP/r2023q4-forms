@@ -1,4 +1,10 @@
 import { string, ref, object, number, mixed, boolean, InferType } from "yup";
+import {
+  LowercaseLetterPattern,
+  NumberPattern,
+  SpecialSymbolPattern,
+  UppercaseLetterPattern,
+} from "../utils/constants";
 
 const getCharacterValidationError = (str: string) =>
   `Your password must have at least 1 ${str} character`;
@@ -20,11 +26,11 @@ export const personSchema = object({
   email: string().nullable().email().required("Email is required"),
   password: string()
     .required("Please, enter a password")
-    .matches(/[0-9]/, getCharacterValidationError("digit"))
-    .matches(/[A-Z]/, getCharacterValidationError("uppercase"))
-    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
+    .matches(NumberPattern, getCharacterValidationError("digit"))
+    .matches(UppercaseLetterPattern, getCharacterValidationError("uppercase"))
+    .matches(LowercaseLetterPattern, getCharacterValidationError("lowercase"))
     .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
+      SpecialSymbolPattern,
       getCharacterValidationError("special character"),
     ),
   confirmPassword: string()

@@ -1,4 +1,5 @@
 import { Person } from "../../validation/form.schema";
+import styles from "./PersonData.module.css";
 
 interface Props {
   data: Person;
@@ -6,7 +7,7 @@ interface Props {
 
 function PersonData({ data }: Props) {
   return (
-    <>
+    <div className={styles.card}>
       <div>
         <span>Name:</span>
         {data.name}
@@ -39,7 +40,7 @@ function PersonData({ data }: Props) {
         <span>Country:</span>
         {data.country}
       </div>
-    </>
+    </div>
   );
 }
 

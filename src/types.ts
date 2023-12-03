@@ -25,3 +25,9 @@ export enum Forms {
   reactHook = "reactHook",
 }
 export type FilledForm = Forms.uncontrolled | Forms.reactHook | undefined;
+
+export enum Strength {
+  poor = "poor",
+  medium = "medium",
+  strong = "strong",
+}

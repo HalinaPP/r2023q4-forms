@@ -1,19 +1,25 @@
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 import { Person, personSchema } from "../../validation/form.schema";
 import collectErrors from "../../validation/helpers";
-import { Fields, Forms } from "../../types";
+import { Fields, Forms, Strength } from "../../types";
 
 import styles from "./UncontrolledElements.module.css";
 import { useAppDispatch } from "../../store/hooks/redux";
-import { setUncontrolledData } from "../../store/reducers/uncontrolledForm.slice";
+import { addUncontrolledData } from "../../store/reducers/uncontrolledForm.slice";
 import { setLastFilledForm } from "../../store/reducers/forms.slice";
+import {
+  calculatePasswordStrength,
+  countMatchedStrengthRequirements,
+} from "../../utils/helpers";
 
 function UncontrolledElements() {
   const [fieldsErrors, setFieldErrors] = useState<Fields>({} as Fields);
   const [isNotValid, setIsNotValid] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(Strength.poor);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -45,7 +51,7 @@ function UncontrolledElements() {
     await personSchema
       .validate(person, { abortEarly: false })
       .then(() => {
-        dispatch(setUncontrolledData(person));
+        dispatch(addUncontrolledData(person));
         dispatch(setLastFilledForm(Forms.uncontrolled));
         navigate("/");
       })
@@ -63,6 +69,14 @@ function UncontrolledElements() {
     setIsNotValid(false);
   };
 
+  const checkPasswordStrength = (event: ChangeEvent) => {
+    const currPassword = (event.target as HTMLInputElement).value;
+    const strengthCount = countMatchedStrengthRequirements(currPassword);
+    const currPasswordStrength = calculatePasswordStrength(strengthCount);
+    
+    setPasswordStrength(currPasswordStrength);
+  };
+
   return (
     <>
       <h1>Uncontrolled Elements</h1>
@@ -75,37 +89,56 @@ function UncontrolledElements() {
           Name:
           <input type="text" id="name" />
         </label>
-        {fieldsErrors.name && (
-          <span className={styles.error}>{fieldsErrors.name}</span>
-        )}
+        <p>
+          {" "}
+          {fieldsErrors.name && (
+            <span className={styles.error}>{fieldsErrors.name}</span>
+          )}
+        </p>
         <label htmlFor="age">
           Age:
           <input type="number" id="age" />
         </label>
-        {fieldsErrors.age && (
-          <span className={styles.error}>{fieldsErrors.age}</span>
-        )}
+        <p>
+          {fieldsErrors.age && (
+            <span className={styles.error}>{fieldsErrors.age}</span>
+          )}
+        </p>
         <label htmlFor="email">
           Email:
           <input type="email" id="email" />
         </label>
-        {fieldsErrors.email && (
-          <span className={styles.error}>{fieldsErrors.email}</span>
-        )}
+        <p>
+          {fieldsErrors.email && (
+            <span className={styles.error}>{fieldsErrors.email}</span>
+          )}
+        </p>
         <label htmlFor="password">
           Password:
-          <input type="password" id="password" />
+          <input
+            type="password"
+            id="password"
+            onChange={checkPasswordStrength}
+          />
         </label>
-        {fieldsErrors.password && (
-          <span className={styles.error}>{fieldsErrors.password}</span>
-        )}
+        <p className={styles.green}>
+          Your password strength is <strong>{passwordStrength}</strong>
+        </p>
+        <p>
+          {fieldsErrors.password && (
+            <span className={styles.error}>{fieldsErrors.password}</span>
+          )}
+        </p>
         <label htmlFor="confirmPassword">
           Confirm password:
           <input type="password" id="confirmPassword" />
         </label>
-        {fieldsErrors.confirmPassword && (
-          <span className={styles.error}>{fieldsErrors.confirmPassword}</span>
-        )}
+        <p>
+          {" "}
+          {fieldsErrors.confirmPassword && (
+            <span className={styles.error}>{fieldsErrors.confirmPassword}</span>
+          )}
+        </p>
         <label htmlFor="gender">
           Gender:
           <label htmlFor="male">
@@ -123,9 +156,11 @@ function UncontrolledElements() {
         <label htmlFor="picture">
           Upload picture: <input type="file" id="picture" />
         </label>
-        {fieldsErrors.picture && (
-          <span className={styles.error}>{fieldsErrors.picture}</span>
-        )}
+        <p>
+          {fieldsErrors.picture && (
+            <span className={styles.error}>{fieldsErrors.picture}</span>
+          )}
+        </p>
         <label htmlFor="country">
           Country:
           <select name="country" autoComplete="on">
@@ -135,9 +170,11 @@ function UncontrolledElements() {
             <option value="greece">Greece</option>
           </select>
         </label>
-        {fieldsErrors.country && (
-          <span className={styles.error}>{fieldsErrors.country}</span>
-        )}
+        <p>
+          {fieldsErrors.country && (
+            <span className={styles.error}>{fieldsErrors.country}</span>
+          )}
+        </p>
         <input type="submit" name="Submit" disabled={isNotValid} />
       </form>
     </>

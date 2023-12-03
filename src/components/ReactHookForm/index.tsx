@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,12 +8,17 @@ import { setLastFilledForm } from "../../store/reducers/forms.slice";
 import { Person, personSchema } from "../../validation/form.schema";
 
 import styles from "./ReactHookForm.module.css";
-import { setReactHookData } from "../../store/reducers/reactHookForm.slice";
-import { Forms } from "../../types";
+import { addReactHookData } from "../../store/reducers/reactHookForm.slice";
+import { Forms, Strength } from "../../types";
+import {
+  calculatePasswordStrength,
+  countMatchedStrengthRequirements,
+} from "../../utils/helpers";
 
 function ReactHookForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [passwordStrength, setPasswordStrength] = useState(Strength.poor);
 
   const {
     register,
@@ -29,9 +34,17 @@ function ReactHookForm() {
   }, []);
 
   const onSubmitHandler: SubmitHandler<Person> = (data) => {
-    dispatch(setReactHookData(data));
+    dispatch(addReactHookData(data));
     dispatch(setLastFilledForm(Forms.reactHook));
     navigate("/");
+  };
+
+  const checkPasswordStrength = (event: ChangeEvent) => {
+    const currPassword = (event.target as HTMLInputElement).value;
+    const strengthCount = countMatchedStrengthRequirements(currPassword);
+    const currPasswordStrength = calculatePasswordStrength(strengthCount);
+
+    setPasswordStrength(currPasswordStrength);
   };
 
   return (
@@ -55,8 +68,16 @@ function ReactHookForm() {
         <p>{errors.email?.message}</p>
         <label htmlFor="password">
           Password:
-          <input type="password" id="password" {...register("password")} />
+          <input
+            type="password"
+            id="password"
+            {...register("password")}
+            onChange={checkPasswordStrength}
+          />
         </label>
+        <p className={styles.green}>
+          Your password strength is <strong>{passwordStrength}</strong>
+        </p>
         <p>{errors.password?.message}</p>
         <label htmlFor="confirmPassword">
           Confirm password:

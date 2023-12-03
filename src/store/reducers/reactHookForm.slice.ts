@@ -1,19 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Person } from "../../validation/form.schema";
 
-const initialState: { person: Person } = {
-  person: {} as Person,
+const initialState: { persons: Person[] } = {
+  persons: [],
 };
 
 const reactHookFormSlice = createSlice({
   name: "reactHookForm",
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<Person>) => {
-      state.person = action.payload;
+    addData: (state, action: PayloadAction<Person>) => {
+      state.persons.push(action.payload);
     },
   },
 });
 
-export const { setData: setReactHookData } = reactHookFormSlice.actions;
+export const { addData: addReactHookData } = reactHookFormSlice.actions;
 export default reactHookFormSlice.reducer;

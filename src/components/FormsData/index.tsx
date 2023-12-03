@@ -6,24 +6,29 @@ import { Forms } from "../../types";
 function FormsData() {
   const lastFilledForm = useAppSelector((state) => state.forms.lastFilledForm);
   const uncontrolledFormData = useAppSelector(
-    (state) => state.uncontrolledForm.person,
+    (state) => state.uncontrolledForm.persons,
   );
   const reactHookFormData = useAppSelector(
-    (state) => state.reactHookForm.person,
+    (state) => state.reactHookForm.persons,
   );
 
   return (
     <>
       <h1>Person data:</h1>
       <div className={styles.data}>
-        {lastFilledForm}
         <section
           className={
             lastFilledForm === Forms.uncontrolled ? styles.active : undefined
           }
         >
           <h2>Uncontrolled Form data:</h2>
-          <PersonData data={uncontrolledFormData} />
+          <div>
+            {uncontrolledFormData.length > 0 ? (
+              uncontrolledFormData.map((data) => <PersonData data={data} />)
+            ) : (
+              <div>There are no items</div>
+            )}
+          </div>
         </section>
         <section
           className={
@@ -31,7 +36,13 @@ function FormsData() {
           }
         >
           <h2>React Hook Form data:</h2>
-          <PersonData data={reactHookFormData} />
+          <div>
+            {reactHookFormData.length > 0 ? (
+              reactHookFormData.map((data) => <PersonData data={data} />)
+            ) : (
+              <div>There are no items</div>
+            )}
+          </div>
         </section>
       </div>
     </>

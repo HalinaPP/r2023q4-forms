@@ -1,4 +1,4 @@
-.data {
+/*.data {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -11,12 +11,14 @@
   margin: 40px;
   padding: 20px;
 }
-
-.data section span {
-  font-weight: bold;
-  padding-right: 20px;
-}
+*/
 
 .active {
   border: 1px solid red;
+}
+.data section > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 40px;
 }
