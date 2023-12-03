@@ -15,11 +15,13 @@ import {
   countMatchedStrengthRequirements,
 } from "../../utils/helpers";
 
+import AutoComplete from "../AutoComplete";
+
 function UncontrolledElements() {
   const [fieldsErrors, setFieldErrors] = useState<Fields>({} as Fields);
   const [isNotValid, setIsNotValid] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(Strength.poor);
-
+ 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -174,15 +176,8 @@ function UncontrolledElements() {
             <span className={styles.error}>{fieldsErrors.picture}</span>
           )}
         </p>
-        <label htmlFor="country">
-          Country:
-          <select name="country" autoComplete="on">
-            <option value="">-- Select country --</option>
-            <option value="belarus">Belarus</option>
-            <option value="poland">Poland</option>
-            <option value="greece">Greece</option>
-          </select>
-        </label>
+
+        <AutoComplete suggestions={["Belarus", "Poland", "Greece"]} />
         <p>
           {fieldsErrors.country && (
             <span className={styles.error}>{fieldsErrors.country}</span>

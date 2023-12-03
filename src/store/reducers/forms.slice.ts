@@ -1,8 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { FilledForm } from "../../types";
 
-const initialState: { lastFilledForm: FilledForm } = {
+interface FormsState {
+  lastFilledForm: FilledForm;
+  countrySuggestions: string[];
+}
+const initialState: FormsState = {
   lastFilledForm: undefined,
+  countrySuggestions: ["Belarus", "Poland", "Greece"],
 };
 
 const formsSlice = createSlice({
