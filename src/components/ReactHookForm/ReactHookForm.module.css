@@ -1,0 +1,27 @@
+.form {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 20px;
+}
+
+.form > label {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+}
+.form label input {
+  justify-self: flex-end;
+  align-self: flex-end;
+  padding: 10px;
+}
+
+.form p {
+  color: red;
+}
+.form .green {
+  color: green;
+}
