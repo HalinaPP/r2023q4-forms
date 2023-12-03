@@ -58,6 +58,7 @@ module.exports = {
       "always",
       { ignoreClassFields: true, destructureInSignature: "always" },
     ],
+    "react/jsx-props-no-spreading": "off",
   },
   parserOptions: {
     ecmaFeatures: {

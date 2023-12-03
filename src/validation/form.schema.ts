@@ -9,14 +9,17 @@ export const personSchema = object({
       excludeEmptyString: true,
       message: "Name must start from the uppercase letter",
     })
-    .required("Name is required"),
-  age: number().min(0).max(130),
+    .required("Please, enter your name"),
+  age: number()
+    .min(0, "Please, enter an age number more or equal 0")
+    .max(130, "Please, enter an age number less or equal 0")
+    .required("Please, enter an age number from 0 to 130"),
   gender: mixed()
     .oneOf(["male", "female"] as const)
-    .defined(),
-  email: string().nullable().email(),
+    .required("Gender is required"),
+  email: string().nullable().email().required("Email is required"),
   password: string()
-    .required("Please enter a password")
+    .required("Please, enter a password")
     .matches(/[0-9]/, getCharacterValidationError("digit"))
     .matches(/[A-Z]/, getCharacterValidationError("uppercase"))
     .matches(/[a-z]/, getCharacterValidationError("lowercase"))
@@ -25,11 +28,11 @@ export const personSchema = object({
       getCharacterValidationError("special character"),
     ),
   confirmPassword: string()
-    .required("Please type your password again")
-    .oneOf([ref("password")], "Passords doesn't match"),
+    .required("Please, type your password again")
+    .oneOf([ref("password")], "Passwords doesn't match"),
   accept: boolean(),
-  picture: string(),
-  country: string().defined(),
+  picture: string().required("Please, select a picture"),
+  country: string().required("Country is required"),
 });
 
 export interface Person extends InferType<typeof personSchema> {

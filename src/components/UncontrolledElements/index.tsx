@@ -19,7 +19,7 @@ function UncontrolledElements() {
 
   useEffect(() => {
     dispatch(setLastFilledForm(undefined));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getIsFormNotValid = (errorArr: Fields) =>
